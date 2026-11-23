@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 
 BASE_URL = "https://api.datacircle.dev/v1"
 TIMEOUT = 30.0
-USER_AGENT = "pipecat-datacircle/0.1.0"
+USER_AGENT = "pipecat-datacircle/0.1.1"
 
 # A plan holds about 90 keys (its terms of use, its aggregators...): the tools keep the ones that choose a plan, the rest is on its page.
 PLAN_KEYS = ["api", "rank", "provider", "plan", "score", "perThousand", "notFoundPerThousand", "billing", "pay",

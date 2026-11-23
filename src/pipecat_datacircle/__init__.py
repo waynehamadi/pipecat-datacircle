@@ -14,6 +14,6 @@ from pipecat_datacircle.functions import (
     search_plans,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __all__ = ["BASE_URL", "DatacircleError", "HANDLERS", "TOOL_NAMES", "best_plans", "datacircle_function",
            "datacircle_functions", "datacircle_tools_schema", "list_apis", "provider", "run", "search_plans"]

@@ -39,15 +39,15 @@ context = LLMContext(
 user_aggregator, assistant_aggregator = LLMContextAggregatorPair(context)
 ```
 
-Put `user_aggregator`, `llm` and `assistant_aggregator` in your pipeline as usual. Each tool's schema carries its handler, so the LLM service runs the tools with no `register_function` call. Pipecat turns the schemas into each provider's tools, so its other LLM services take them the same way.
+Put `user_aggregator`, `llm` and `assistant_aggregator` in your pipeline as usual. You don't call `register_function`. The LLM service runs each tool with the handler in the tool's schema. Pipecat turns the schemas into each provider's tools. Pipecat's other LLM services take the same tools.
 
 To add the tools beside your own, list them: `LLMContext(messages, tools=[my_tool, *datacircle_functions()])`.
 
-To give fewer tools, list their names: `datacircle_tools_schema(["datacircle_best_plans"])`.
+To give only some of the tools, list their names: `datacircle_tools_schema(["datacircle_best_plans"])`.
 
 ## Call a tool yourself
 
-`run` gives what the model gets:
+`run` returns a tool's output for the model:
 
 ```python
 from pipecat_datacircle import run
@@ -57,15 +57,15 @@ print(run("datacircle_best_plans", {"slug": "email-finder", "limit": 3}))
 
 ## Tool output for the model
 
-Each result is our API's answer as a dict. Pipecat gives it to the model as JSON. Each plan comes with a rank, provider, plan, score, price per 1,000 (`perThousand`, in dollars) and a page on datacircle.dev. That page lists every field.
+Each result is our API's answer as a dict. Pipecat gives the model this dict as JSON. Each plan comes with a rank, provider, plan, score, price per 1,000 (`perThousand`, in dollars) and a page on datacircle.dev. That page lists every field.
 
 You can give a provider's name in place of a slug. The tool turns `Bright Data` into `bright-data`.
 
-If the model passes an unknown slug, the result is `{"error": ...}` with the API's error message. For an unknown API slug, the message lists every valid slug, and the model can call the tool again. The tool checks each number from the model before the API call. If a number is out of range, the tool skips the API call and the model gets an error message.
+The model gets `{"error": ...}` with the API's error message when the model passes an unknown slug. The error for an unknown API slug lists every valid slug. The model can then pick one and call the tool again. The tool checks each number from the model before the API call. The model gets an error message for any number out of range. The tool doesn't call the API for that number.
 
 ## Network
 
-Each tool call makes one HTTPS GET request to https://api.datacircle.dev/v1 and nothing else, in a thread, so the pipeline keeps running. The request holds only the tool's own arguments. The API takes up to 60 calls a minute from one IP address. When the API asks the tool to wait, the tool waits up to a minute. The tool waits once per call at most. All plans are in one file at https://datacircle.dev/datacircle.json.
+Each tool call makes one HTTPS GET request to https://api.datacircle.dev/v1 and no other network calls. The request runs in a thread, so your pipeline keeps running. The request holds only the tool's own arguments. The API takes up to 60 calls a minute from one IP address. If the API says to wait, the tool waits up to a minute. The tool waits only once per call. All plans are in one file at https://datacircle.dev/datacircle.json.
 
 ## Links
 
