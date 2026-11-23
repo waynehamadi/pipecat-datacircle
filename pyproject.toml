@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pipecat-datacircle"
+version = "0.1.0"
+description = "Pipecat function tools for the Datacircle API: find the best GTM APIs"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = ["pipecat-ai>=1.4.0"]
+keywords = ["pipecat", "pipecat-ai", "function-calling", "tools", "voice-agents", "gtm", "api", "api-pricing", "b2b-data", "datacircle"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Homepage = "https://datacircle.dev"
+Documentation = "https://api.datacircle.dev/v1/openapi.json"
+Repository = "https://github.com/waynehamadi/pipecat-datacircle"
+
+[dependency-groups]
+test = ["pytest>=8"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pipecat_datacircle"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "LICENSE", "pyproject.toml"]
